@@ -45,6 +45,26 @@ $ npm run build
 $ npm run serve
 ```
 
+## For HTTP basic authentication
+Kafka Connect REST API supports HTTP basic authentication. ([Connect REST API](https://docs.confluent.io/platform/current/security/basic-auth.html#kconnect-rest-api))
+
+You can set username and password for basic auth as environment variables.
+```
+$ export VUE_APP_AUTH_USERNAME={username}
+$ export VUE_APP_AUTH_PASSWORD={password}
+$ npm run serve
+```
+
+An additional header `access.control.allow.headers` is necessary when implementing HTTP basic authentication, but this is not supported in `connect-distributed.properties` file. As a workaround, you should preset CORS config in a reverse proxy server.  
+For example, you can set up NGINX reverse proxy and allow cross origin requests by adding configurations into your nginx conf file.
+```
+add_header 'Access-Control-Allow-Origin' '*';
+add_header 'Access-Control-Allow-Methods' 'GET,OPTIONS,HEAD,POST,PUT,DELETE';
+add_header 'Access-Control-Allow-Headers' 'origin,content-type,accept,authorization';
+```
+※ **NOTE**: If you are using multiple Kafka Connect application servers, each server is supposed to share the same username and password.
+Failure to do so may lead to unauthorized error.
+
 ## License
 
 This software is licensed under the [Apache 2 license](LICENSE), quoted below.
